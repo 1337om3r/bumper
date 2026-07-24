@@ -7,7 +7,7 @@
 Discord sunucularını ve kanallarını belirlenen zaman aralıklarında otomatik olarak öne çıkaran (`/bump`), geri sayım sayacı, maskeli token yönetimi ve canlı aktivite günlükleri sunan **Glassmorphism Web UI** ve Python tabanlı yönetim platformu.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/1337om3r/bumper/main/assets/hero.png" alt="BUMPER Discord Auto-Bump Dashboard Showcase" width="100%">
+  <img src="assets/hero.png" alt="BUMPER Discord Auto-Bump Dashboard Showcase" width="100%">
 </p>
 
 ---
