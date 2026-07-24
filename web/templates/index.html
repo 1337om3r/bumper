@@ -166,7 +166,7 @@ body {
 
 .search-box {
     position: relative;
-    width: 260px;
+    width: 280px;
 }
 
 .search-box input {
@@ -193,27 +193,6 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-}
-
-.icon-btn {
-    background: none;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.user-avatar {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-blurple), var(--accent-cyan));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.85rem;
-    color: #fff;
 }
 
 /* Dashboard Body */
@@ -257,6 +236,15 @@ body {
     border-radius: 50%;
     background: var(--accent-emerald);
     box-shadow: 0 0 10px var(--accent-emerald);
+}
+
+/* View Sections */
+.view-section {
+    display: none;
+}
+
+.view-section.active-view {
+    display: block;
 }
 
 /* Main Content Grid */
@@ -630,7 +618,7 @@ body {
     margin-bottom: 6px;
 }
 
-.form-field input {
+.form-field input, .form-field select {
     width: 100%;
     padding: 10px;
     background: rgba(10, 14, 24, 0.8);
@@ -650,19 +638,19 @@ body {
             <span>BUMPER</span>
         </div>
         <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('dashboard', this)">
+            <li class="nav-item active" onclick="switchView('dashboard', this)">
                 <i class="fa-solid fa-gauge-high"></i> Dashboard
             </li>
-            <li class="nav-item" onclick="switchTab('tokens', this)">
+            <li class="nav-item" onclick="switchView('tokens', this)">
                 <i class="fa-solid fa-key"></i> Token Manager
             </li>
-            <li class="nav-item" onclick="switchTab('logs', this)">
+            <li class="nav-item" onclick="switchView('logs', this)">
                 <i class="fa-solid fa-list-check"></i> Logs
             </li>
-            <li class="nav-item" onclick="switchTab('settings', this)">
+            <li class="nav-item" onclick="switchView('settings', this)">
                 <i class="fa-solid fa-sliders"></i> Settings
             </li>
-            <li class="nav-item" onclick="switchTab('help', this)">
+            <li class="nav-item" onclick="switchView('help', this)">
                 <i class="fa-solid fa-circle-question"></i> Help
             </li>
         </ul>
@@ -677,119 +665,216 @@ body {
             </div>
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Search...">
+                <input type="text" id="search-input" placeholder="Search logs & tokens...">
             </div>
             <div class="header-actions">
-                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
-                <div class="user-avatar">A</div>
+                <a href="https://github.com/1337om3r/bumper" target="_blank" class="btn-sub" style="padding:6px 14px; font-size:0.75rem; text-decoration:none;">
+                    <i class="fa-brands fa-github"></i> GitHub Repo
+                </a>
             </div>
         </header>
 
         <!-- Dashboard Body -->
         <div class="dashboard-body">
             <div class="title-row">
-                <h1 class="dashboard-title">BUMPER: Discord Auto-Bump Dashboard</h1>
+                <h1 class="dashboard-title" id="view-title">BUMPER: Discord Auto-Bump Dashboard</h1>
                 <div class="status-badge" id="engine-status-badge">
                     <span class="dot-green"></span> ACTIVE & RUNNING
                 </div>
             </div>
 
-            <!-- Content Grid -->
-            <div class="content-grid">
+            <!-- VIEW 1: DASHBOARD (DEFAULT) -->
+            <div id="view-dashboard" class="view-section active-view">
+                <div class="content-grid">
 
-                <!-- Card 1: Autobump Monitoring (Left Side) -->
-                <div class="glass-box monitoring-card">
-                    <div class="box-header" style="width:100%;">
-                        <span class="box-title">AUTOBUMP MONITORING</span>
-                        <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
-                    </div>
+                    <!-- Card 1: Autobump Monitoring (Left Side) -->
+                    <div class="glass-box monitoring-card">
+                        <div class="box-header" style="width:100%;">
+                            <span class="box-title">AUTOBUMP MONITORING</span>
+                            <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
+                        </div>
 
-                    <div class="ring-container">
-                        <svg class="ring-svg" viewBox="0 0 240 240">
-                            <defs>
-                                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#a855f7" />
-                                    <stop offset="100%" stop-color="#22d3ee" />
-                                </linearGradient>
-                            </defs>
-                            <circle class="ring-bg" cx="120" cy="120" r="110"></circle>
-                            <circle class="ring-bar" id="ring-bar" cx="120" cy="120" r="110"></circle>
-                        </svg>
-                        <div class="ring-center">
-                            <span class="pct-num" id="pct-num">74%</span>
-                            <span class="next-lbl">NEXT BUMP IN:</span>
-                            <span class="countdown-txt" id="countdown-txt">01m 26s</span>
-                            <span class="target-info">#general-chat | server-1</span>
-                            <span class="pill-status">AUTO-BUMPING</span>
+                        <div class="ring-container">
+                            <svg class="ring-svg" viewBox="0 0 240 240">
+                                <defs>
+                                    <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#a855f7" />
+                                        <stop offset="100%" stop-color="#22d3ee" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="ring-bg" cx="120" cy="120" r="110"></circle>
+                                <circle class="ring-bar" id="ring-bar" cx="120" cy="120" r="110"></circle>
+                            </svg>
+                            <div class="ring-center">
+                                <span class="pct-num" id="pct-num">74%</span>
+                                <span class="next-lbl">NEXT BUMP IN:</span>
+                                <span class="countdown-txt" id="countdown-txt">01m 26s</span>
+                                <span class="target-info">#general-chat | server-1</span>
+                                <span class="pill-status">AUTO-BUMPING</span>
+                            </div>
+                        </div>
+
+                        <span style="font-size:0.72rem; color:var(--text-muted);">Real-time progress</span>
+
+                        <div class="stats-grid">
+                            <div class="stat-cell">
+                                <span class="stat-val" id="stat-bumps">142</span>
+                                <span class="stat-lbl">Bumps</span>
+                            </div>
+                            <div class="stat-cell">
+                                <span class="stat-val" id="stat-servers">12</span>
+                                <span class="stat-lbl">Servers</span>
+                            </div>
+                            <div class="stat-cell">
+                                <span class="stat-val" id="stat-tokens">8</span>
+                                <span class="stat-lbl">Tokens</span>
+                            </div>
+                            <div class="stat-cell">
+                                <span class="stat-val" style="color:var(--accent-rose);" id="stat-fails">1</span>
+                                <span class="stat-lbl">Failures</span>
+                            </div>
+                        </div>
+
+                        <div class="controls-bar">
+                            <button class="btn-main" id="btn-toggle-engine">START / STOP</button>
+                            <button class="btn-sub" onclick="switchView('settings', document.querySelectorAll('.nav-item')[3])"><i class="fa-solid fa-gear"></i> SETTINGS</button>
+                            <button class="btn-sub" id="btn-refresh"><i class="fa-solid fa-rotate-right"></i> REFRESH</button>
                         </div>
                     </div>
 
-                    <span style="font-size:0.72rem; color:var(--text-muted);">Real-time progress</span>
-
-                    <div class="stats-grid">
-                        <div class="stat-cell">
-                            <span class="stat-val" id="stat-bumps">142</span>
-                            <span class="stat-lbl">Bumps</span>
+                    <!-- Card 2: Live Activity Logs (Top Right) -->
+                    <div class="glass-box logs-card">
+                        <div class="box-header">
+                            <span class="box-title">LIVE ACTIVITY LOGS</span>
+                            <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
                         </div>
-                        <div class="stat-cell">
-                            <span class="stat-val" id="stat-servers">12</span>
-                            <span class="stat-lbl">Servers</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-val" id="stat-tokens">8</span>
-                            <span class="stat-lbl">Tokens</span>
-                        </div>
-                        <div class="stat-cell">
-                            <span class="stat-val" style="color:var(--accent-rose);" id="stat-fails">1</span>
-                            <span class="stat-lbl">Failures</span>
+                        <div class="logs-list" id="logs-list">
+                            <!-- Dynamic Logs -->
                         </div>
                     </div>
 
-                    <div class="controls-bar">
-                        <button class="btn-main" id="btn-toggle-engine">START / STOP</button>
-                        <button class="btn-sub" id="btn-open-settings"><i class="fa-solid fa-gear"></i> SETTINGS</button>
-                        <button class="btn-sub" id="btn-refresh"><i class="fa-solid fa-rotate-right"></i> REFRESH</button>
+                    <!-- Card 3: Token Management (Bottom Right) -->
+                    <div class="glass-box token-card">
+                        <div class="box-header">
+                            <span class="box-title">TOKEN MANAGEMENT</span>
+                            <button class="btn-add-token-header" onclick="openModal()">
+                                <i class="fa-solid fa-plus"></i> ADD TOKEN
+                            </button>
+                        </div>
+                        <div class="table-frame">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Account Name</th>
+                                        <th>Status</th>
+                                        <th>Last Bump</th>
+                                        <th>Performance</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="token-tbody">
+                                    <!-- Dynamic Tokens -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
                 </div>
+            </div>
 
-                <!-- Card 2: Live Activity Logs (Top Right) -->
-                <div class="glass-box logs-card">
+            <!-- VIEW 2: TOKEN MANAGER -->
+            <div id="view-tokens" class="view-section">
+                <div class="glass-box">
                     <div class="box-header">
-                        <span class="box-title">LIVE ACTIVITY LOGS</span>
-                        <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
-                    </div>
-                    <div class="logs-list" id="logs-list">
-                        <!-- Dynamic Logs -->
-                    </div>
-                </div>
-
-                <!-- Card 3: Token Management (Bottom Right) -->
-                <div class="glass-box token-card">
-                    <div class="box-header">
-                        <span class="box-title">TOKEN MANAGEMENT</span>
-                        <button class="btn-add-token-header" id="btn-add-token-modal">
-                            <i class="fa-solid fa-plus"></i> ADD TOKEN
+                        <span class="box-title">FULL TOKEN MANAGER</span>
+                        <button class="btn-add-token-header" onclick="openModal()">
+                            <i class="fa-solid fa-plus"></i> ADD NEW TOKEN
                         </button>
                     </div>
                     <div class="table-frame">
                         <table class="table-custom">
                             <thead>
                                 <tr>
-                                    <th>Account Name</th>
+                                    <th>Account / Token Name</th>
+                                    <th>Masked Token</th>
+                                    <th>Target Channel ID</th>
                                     <th>Status</th>
-                                    <th>Last Bump</th>
-                                    <th>Performance</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="token-tbody">
+                            <tbody id="full-token-tbody">
                                 <!-- Dynamic Tokens -->
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
+
+            <!-- VIEW 3: FULL LOGS -->
+            <div id="view-logs" class="view-section">
+                <div class="glass-box">
+                    <div class="box-header">
+                        <span class="box-title">FULL SYSTEM ACTIVITY LOGS</span>
+                        <button class="btn-sub" onclick="refreshData()"><i class="fa-solid fa-rotate-right"></i> Refresh Logs</button>
+                    </div>
+                    <div class="logs-list" id="full-logs-list" style="max-height:500px;">
+                        <!-- Full Logs -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: SETTINGS -->
+            <div id="view-settings" class="view-section">
+                <div class="glass-box" style="max-width:600px;">
+                    <div class="box-header">
+                        <span class="box-title">BUMPER SYSTEM SETTINGS</span>
+                    </div>
+                    <div class="form-field">
+                        <label>Auto-Bump Interval (Minutes)</label>
+                        <select id="setting-interval">
+                            <option value="7200">120 Minutes (Standard Disboard Cooldown)</option>
+                            <option value="3600">60 Minutes</option>
+                            <option value="1800">30 Minutes</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Discord Webhook Notification URL (Optional)</label>
+                        <input type="text" placeholder="https://discord.com/api/webhooks/...">
+                    </div>
+                    <div class="form-field">
+                        <label>Auto-Retry on Rate Limit</label>
+                        <select>
+                            <option value="true">Enabled (Wait 5 minutes & retry)</option>
+                            <option value="false">Disabled</option>
+                        </select>
+                    </div>
+                    <button class="btn-main" style="width:100%; margin-top:10px;" onclick="alert('Settings saved!')">Save Configuration</button>
+                </div>
+            </div>
+
+            <!-- VIEW 5: HELP & GUIDE -->
+            <div id="view-help" class="view-section">
+                <div class="glass-box" style="max-width:700px; line-height:1.7;">
+                    <div class="box-header">
+                        <span class="box-title">❓ BUMPER USER GUIDE & INSTRUCTIONS</span>
+                    </div>
+                    <h3 style="color:var(--accent-cyan); margin-bottom:8px;">1. How to get your Discord Token?</h3>
+                    <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">
+                        Open Discord in Browser -> Press <code>F12</code> -> Go to <code>Console</code> or <code>Network</code> tab -> Search for authorization headers -> Copy your user token.
+                    </p>
+
+                    <h3 style="color:var(--accent-cyan); margin-bottom:8px;">2. How to find your Target Channel ID?</h3>
+                    <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:16px;">
+                        Enable Developer Mode in Discord Settings -> Right-click the channel where Disboard <code>/bump</code> command is executed -> Click <code>Copy Channel ID</code>.
+                    </p>
+
+                    <h3 style="color:var(--accent-cyan); margin-bottom:8px;">3. Safe & Automated Bumping</h3>
+                    <p style="color:var(--text-secondary); font-size:0.85rem;">
+                        BUMPER handles rate-limits automatically and triggers <code>/bump</code> commands according to Disboard's 2-hour cooldown policy.
+                    </p>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -821,7 +906,9 @@ body {
         const pctNum = document.getElementById('pct-num');
         const countdownTxt = document.getElementById('countdown-txt');
         const logsList = document.getElementById('logs-list');
+        const fullLogsList = document.getElementById('full-logs-list');
         const tokenTbody = document.getElementById('token-tbody');
+        const fullTokenTbody = document.getElementById('full-token-tbody');
         const modal = document.getElementById('modal-add-token');
 
         let isRunning = true;
@@ -832,7 +919,6 @@ body {
             const s = secRemaining % 60;
             countdownTxt.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
 
-            // Circumference for r=110 is ~691
             const offset = 691 - (691 * (pct / 100));
             ringBar.style.strokeDashoffset = offset;
         }
@@ -853,38 +939,46 @@ body {
                 document.getElementById('stat-tokens').textContent = data.tokens.length;
 
                 // Render Logs
-                logsList.innerHTML = '';
-                data.logs.forEach(l => {
-                    const row = document.createElement('div');
-                    row.className = `log-row ${l.status === 'SUCCESS' ? '' : 'failed'}`;
-                    row.innerHTML = `
-                        <div>
-                            <span class="log-time">[${l.formatted_time}]</span>
-                            <strong>${l.token_name}:</strong> <span style="color:var(--text-secondary);">${l.message}</span>
-                        </div>
-                        <span class="${l.status === 'SUCCESS' ? 'log-badge-succ' : 'log-badge-err'}">${l.status}</span>
-                    `;
-                    logsList.appendChild(row);
-                });
+                const renderLogs = (targetEl) => {
+                    targetEl.innerHTML = '';
+                    data.logs.forEach(l => {
+                        const row = document.createElement('div');
+                        row.className = `log-row ${l.status === 'SUCCESS' ? '' : 'failed'}`;
+                        row.innerHTML = `
+                            <div>
+                                <span class="log-time">[${l.formatted_time}]</span>
+                                <strong>${l.token_name}:</strong> <span style="color:var(--text-secondary);">${l.message}</span>
+                            </div>
+                            <span class="${l.status === 'SUCCESS' ? 'log-badge-succ' : 'log-badge-err'}">${l.status}</span>
+                        `;
+                        targetEl.appendChild(row);
+                    });
+                };
+                renderLogs(logsList);
+                renderLogs(fullLogsList);
 
                 // Render Tokens
-                tokenTbody.innerHTML = '';
-                data.tokens.forEach(t => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><span class="token-pill">${t.masked_token}</span></td>
-                        <td><span class="online-tag"><span class="online-dot"></span> Online</span></td>
-                        <td style="color:var(--text-muted);">Just now</td>
-                        <td style="color:var(--accent-cyan); font-weight:600;">100%</td>
-                        <td><button class="btn-sub" style="padding:2px 8px; font-size:0.7rem;" onclick="deleteToken(${t.index})">Delete</button></td>
-                    `;
-                    tokenTbody.appendChild(tr);
-                });
+                const renderTokens = (targetEl) => {
+                    targetEl.innerHTML = '';
+                    data.tokens.forEach(t => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${t.name}</strong> <br><span class="token-pill">${t.masked_token}</span></td>
+                            <td><span class="online-tag"><span class="online-dot"></span> Online</span></td>
+                            <td style="color:var(--text-muted);">${t.channel_id}</td>
+                            <td style="color:var(--accent-cyan); font-weight:600;">100%</td>
+                            <td><button class="btn-sub" style="padding:2px 8px; font-size:0.7rem;" onclick="deleteToken(${t.index})">Delete</button></td>
+                        `;
+                        targetEl.appendChild(tr);
+                    });
+                };
+                renderTokens(tokenTbody);
+                renderTokens(fullTokenTbody);
 
             } catch (e) { console.error(e); }
         }
 
-        document.getElementById('btn-add-token-modal').addEventListener('click', () => modal.style.display = 'flex');
+        function openModal() { modal.style.display = 'flex'; }
         function closeModal() { modal.style.display = 'none'; }
 
         async function submitToken() {
@@ -922,9 +1016,21 @@ body {
         });
 
         document.getElementById('btn-refresh').addEventListener('click', refreshData);
-        function switchTab(name, el) {
+
+        function switchView(viewName, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
+            if (el) el.classList.add('active');
+
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) targetView.classList.add('active-view');
+
+            const titleEl = document.getElementById('view-title');
+            if (viewName === 'dashboard') titleEl.textContent = 'BUMPER: Discord Auto-Bump Dashboard';
+            if (viewName === 'tokens') titleEl.textContent = 'BUMPER: Token & Account Manager';
+            if (viewName === 'logs') titleEl.textContent = 'BUMPER: Activity & Event Logs';
+            if (viewName === 'settings') titleEl.textContent = 'BUMPER: System Settings & Webhooks';
+            if (viewName === 'help') titleEl.textContent = 'BUMPER: User Guide & Setup Instructions';
         }
 
         setInterval(refreshData, 3000);
