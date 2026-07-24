@@ -137,6 +137,12 @@ body {
     box-shadow: 0 0 22px rgba(88, 101, 242, 0.6);
 }
 
+.btn-emerald {
+    background: linear-gradient(135deg, var(--accent-emerald), #059669);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
+}
+
 .btn-secondary {
     background: rgba(30, 41, 59, 0.9);
     color: var(--text-primary);
@@ -256,13 +262,19 @@ body {
     flex-direction: column;
 }
 
+.card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
 .card-title {
     font-size: 1.05rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 16px;
     color: var(--text-secondary);
 }
 
@@ -342,6 +354,58 @@ body {
     font-size: 0.75rem;
     font-weight: 700;
 }
+
+.btn-danger {
+    background: rgba(244, 63, 94, 0.2);
+    color: var(--accent-rose);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: #161b26;
+    border: 1px solid var(--border-glass);
+    padding: 30px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
     </style>
 </head>
 <body>
@@ -360,8 +424,8 @@ body {
                 <button id="bump-now-btn" class="btn btn-blurple">
                     <i data-lucide="zap"></i> Şimdi Bump Et
                 </button>
-                <button id="refresh-btn" class="btn btn-secondary">
-                    <i data-lucide="refresh-cw"></i> Yenile
+                <button id="open-modal-btn" class="btn btn-emerald">
+                    <i data-lucide="plus-circle"></i> Token Ekle
                 </button>
             </div>
         </header>
@@ -386,19 +450,19 @@ body {
 
                 <div class="kpi-row">
                     <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-bumps">142</div>
+                        <div class="kpi-box-num" id="kpi-bumps">0</div>
                         <div class="kpi-box-lbl">Başarılı Bump</div>
                     </div>
                     <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-servers">12</div>
+                        <div class="kpi-box-num" id="kpi-servers">0</div>
                         <div class="kpi-box-lbl">Hedef Sunucu</div>
                     </div>
                     <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-tokens">2</div>
+                        <div class="kpi-box-num" id="kpi-tokens">0</div>
                         <div class="kpi-box-lbl">Aktif Token</div>
                     </div>
                     <div class="kpi-box">
-                        <div class="kpi-box-num" style="color:var(--accent-rose);" id="kpi-fails">1</div>
+                        <div class="kpi-box-num" style="color:var(--accent-rose);" id="kpi-fails">0</div>
                         <div class="kpi-box-lbl">Hata / Limit</div>
                     </div>
                 </div>
@@ -406,7 +470,9 @@ body {
 
             <!-- Live Activity Logs -->
             <section class="logs-card glass-card">
-                <h3 class="card-title"><i data-lucide="list"></i> Canlı Aktivite Günlükleri</h3>
+                <div class="card-header-row">
+                    <h3 class="card-title"><i data-lucide="list"></i> Canlı Aktivite Günlükleri</h3>
+                </div>
                 <div class="logs-wrapper" id="logs-wrapper">
                     <!-- Dynamic Log Items -->
                 </div>
@@ -414,16 +480,19 @@ body {
 
             <!-- Tokens Management -->
             <section class="tokens-card glass-card">
-                <h3 class="card-title"><i data-lucide="key"></i> Token & Hesap Yönetimi</h3>
+                <div class="card-header-row">
+                    <h3 class="card-title"><i data-lucide="key"></i> Token & Hesap Yönetimi (Kullanıcı Kendi Token'ını Ekler)</h3>
+                    <button id="open-modal-btn-2" class="btn btn-emerald" style="padding:6px 14px; font-size:0.75rem;">+ Yeni Token Ekle</button>
+                </div>
                 <div class="table-wrapper">
                     <table class="tokens-table">
                         <thead>
                             <tr>
-                                <th>Hesap Adı</th>
+                                <th>Hesap / Token Adı</th>
                                 <th>Maskeli Token</th>
                                 <th>Hedef Kanal ID</th>
                                 <th>Durum</th>
-                                <th>Toplam Bump</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="tokens-table-body">
@@ -436,6 +505,29 @@ body {
         </main>
     </div>
 
+    <!-- Modal Form for Token Addition -->
+    <div class="modal-overlay" id="token-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom:16px; font-family:var(--font-heading);">➕ Kendi Discord Token'ını Ekle</h3>
+            <div class="form-group">
+                <label>Hesap / Token Adı</label>
+                <input type="text" id="input-token-name" class="form-control" placeholder="Örn: Benim-Ana-Hesabim">
+            </div>
+            <div class="form-group">
+                <label>Discord Token'ı</label>
+                <input type="password" id="input-token-val" class="form-control" placeholder="Discord hesabınızın Token değeri">
+            </div>
+            <div class="form-group">
+                <label>Hedef Kanal ID</label>
+                <input type="text" id="input-channel-id" class="form-control" placeholder="Örn: 1182348765432198">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button id="close-modal-btn" class="btn btn-secondary">İptal</button>
+                <button id="save-token-btn" class="btn btn-blurple">Kaydet & Başlat</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script -->
     <script>
         const countdownVal = document.getElementById('countdown-val');
@@ -445,8 +537,15 @@ body {
         const tokensTableBody = document.getElementById('tokens-table-body');
         const bumpNowBtn = document.getElementById('bump-now-btn');
 
-        let totalSec = 7200;
-        let currentSec = 86;
+        const modal = document.getElementById('token-modal');
+        const openModalBtn = document.getElementById('open-modal-btn');
+        const openModalBtn2 = document.getElementById('open-modal-btn-2');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const saveTokenBtn = document.getElementById('save-token-btn');
+
+        openModalBtn.addEventListener('click', () => modal.style.display = 'flex');
+        openModalBtn2.addEventListener('click', () => modal.style.display = 'flex');
+        closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
 
         function updateTimerDisplay(seconds, pct) {
             const m = Math.floor(seconds / 60);
@@ -454,7 +553,6 @@ body {
             countdownVal.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
             countdownPct.textContent = `%${pct} Tamamlandı`;
 
-            // Circumference is ~565
             const offset = 565 - (565 * (pct / 100));
             timerBar.style.strokeDashoffset = offset;
         }
@@ -498,7 +596,7 @@ body {
                         <td style="font-family:monospace; color:var(--accent-cyan);">${t.masked_token}</td>
                         <td style="color:#94a3b8;">${t.channel_id}</td>
                         <td><span class="badge-online">✓ ${t.status}</span></td>
-                        <td><strong>${t.total_bumps}</strong></td>
+                        <td><button class="btn-danger" onclick="deleteToken(${t.index})">Sil</button></td>
                     `;
                     tokensTableBody.appendChild(tr);
                 });
@@ -508,26 +606,49 @@ body {
             }
         }
 
+        async function deleteToken(index) {
+            try {
+                await fetch('/api/delete-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ index })
+                });
+                fetchStatus();
+            } catch (e) { console.error(e); }
+        }
+
+        saveTokenBtn.addEventListener('click', async () => {
+            const name = document.getElementById('input-token-name').value;
+            const token = document.getElementById('input-token-val').value;
+            const channel_id = document.getElementById('input-channel-id').value;
+
+            if (!name || !token || !channel_id) {
+                alert('Lütfen tüm alanları doldurun!');
+                return;
+            }
+
+            try {
+                await fetch('/api/add-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, token, channel_id })
+                });
+                modal.style.display = 'none';
+                document.getElementById('input-token-name').value = '';
+                document.getElementById('input-token-val').value = '';
+                document.getElementById('input-channel-id').value = '';
+                fetchStatus();
+                alert('✅ Yeni Token eklendi!');
+            } catch (e) { console.error(e); }
+        });
+
         bumpNowBtn.addEventListener('click', async () => {
             try {
                 await fetch('/api/bump-now', { method: 'POST' });
                 fetchStatus();
                 alert('⚡ Manüel bump isteği tetiklendi!');
-            } catch (e) {
-                console.error(e);
-            }
+            } catch (e) { console.error(e); }
         });
-
-        // Loop countdown ticker locally
-        setInterval(() => {
-            if (currentSec > 0) {
-                currentSec--;
-                const pct = Math.floor(((7200 - currentSec) / 7200) * 100);
-                updateTimerDisplay(currentSec, pct);
-            } else {
-                fetchStatus();
-            }
-        }, 1000);
 
         fetchStatus();
         lucide.createIcons();

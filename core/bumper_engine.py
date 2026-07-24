@@ -10,13 +10,15 @@ class BumperToken:
     name: str
     token: str
     channel_id: str
-    status: str = "Online"
+    status: str = "Ready"
     last_bump: Optional[float] = None
     total_bumps: int = 0
 
     @property
     def masked_token(self) -> str:
         """Returns masked token string for security."""
+        if not self.token or self.token == "YOUR_DISCORD_TOKEN_HERE":
+            return "YOUR_DISCORD_TOKEN_HERE"
         if len(self.token) > 12:
             return f"{self.token[:4]}...{self.token[-4:]}"
         return "••••••••••••"
@@ -40,18 +42,30 @@ class BumperEngine:
     def __init__(self, bump_interval_seconds: int = 7200):
         self.bump_interval = bump_interval_seconds
         self.tokens: List[BumperToken] = [
-            BumperToken(name="Primary-Account", token="MTI0OTg3MjM0OTg3MjM0.G9x0.DemoTokenKeyAlpha", channel_id="1182348765432198"),
-            BumperToken(name="Secondary-Alt", token="OTg3NjU0MzIxMDk4NzY1.H1y2.DemoTokenKeyBeta", channel_id="1189876543210987")
+            BumperToken(name="Sample-Token-1", token="YOUR_DISCORD_TOKEN_HERE", channel_id="1182348765432198"),
+            BumperToken(name="Sample-Token-2", token="YOUR_DISCORD_TOKEN_HERE", channel_id="1189876543210987")
         ]
         self.logs: List[BumpLogEvent] = []
-        self.total_success_bumps: int = 142
-        self.total_failed_bumps: int = 1
+        self.total_success_bumps: int = 0
+        self.total_failed_bumps: int = 0
         self.is_running: bool = True
-        self.last_bump_timestamp: float = time.time() - 3600
-        self.next_bump_timestamp: float = time.time() + 3600
+        self.last_bump_timestamp: float = time.time()
+        self.next_bump_timestamp: float = time.time() + 7200
         
-        # Initial seed log
-        self.add_log("Discord-Server-1", "#general-chat", "Primary-Account", "SUCCESS", "Autobump triggered successfully via /bump")
+        # Initial log
+        self.add_log("Discord-Server", "#general-chat", "System", "INFO", "Bumper Web GUI ready. Add your Discord token to begin auto-bumping.")
+
+    def add_token(self, name: str, token: str, channel_id: str) -> None:
+        """Adds a new user-supplied Discord token."""
+        new_token = BumperToken(name=name, token=token, channel_id=channel_id)
+        self.tokens.append(new_token)
+        self.add_log("Discord-Server", f"#{channel_id[-4:] if len(channel_id)>4 else channel_id}", name, "INFO", f"Token '{name}' added successfully.")
+
+    def remove_token(self, token_index: int) -> None:
+        """Removes a token by index."""
+        if 0 <= token_index < len(self.tokens):
+            removed = self.tokens.pop(token_index)
+            self.add_log("Discord-Server", "N/A", removed.name, "INFO", f"Token '{removed.name}' removed.")
 
     def get_seconds_until_next_bump(self) -> int:
         """Returns remaining seconds until next automated bump."""
@@ -78,7 +92,7 @@ class BumperEngine:
     def trigger_manual_bump(self, channel_id: Optional[str] = None) -> BumpLogEvent:
         """Executes a manual bump action instantly."""
         now = time.time()
-        token = self.tokens[0] if self.tokens else BumperToken("Default", "token", "0")
+        token = self.tokens[0] if self.tokens else BumperToken("Default", "YOUR_DISCORD_TOKEN_HERE", "0")
         target_channel = channel_id or token.channel_id
         
         token.last_bump = now
@@ -91,11 +105,11 @@ class BumperEngine:
         event = BumpLogEvent(
             timestamp=now,
             formatted_time=t_str,
-            server_name="Discord-Server-Active",
+            server_name="Discord-Server",
             channel_id=f"#{target_channel[-4:] if len(target_channel) > 4 else target_channel}",
             token_name=token.name,
             status="SUCCESS",
-            message="Manual bump triggered! /bump command dispatched successfully."
+            message="Bump triggered successfully! /bump command sent."
         )
         self.logs.append(event)
         return event
@@ -118,8 +132,9 @@ class BumperEngine:
             })
 
         serialized_tokens = []
-        for t in self.tokens:
+        for idx, t in enumerate(self.tokens):
             serialized_tokens.append({
+                "index": idx,
                 "name": t.name,
                 "masked_token": t.masked_token,
                 "channel_id": t.channel_id,
@@ -133,7 +148,7 @@ class BumperEngine:
             "progress_pct": progress_pct,
             "total_success": self.total_success_bumps,
             "total_failed": self.total_failed_bumps,
-            "total_servers": 12,
+            "total_servers": len(self.tokens),
             "tokens": serialized_tokens,
             "logs": serialized_logs
         }
