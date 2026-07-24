@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUMPER | Discord Otomatik Sunucu Öne Çıkarıcı & Yönetici</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+:root {
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
+    --bg-dark: #0e1117;
+    --bg-card: rgba(22, 27, 38, 0.75);
+    --bg-card-hover: rgba(30, 38, 54, 0.9);
+
+    --border-glass: rgba(255, 255, 255, 0.08);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+
+    --accent-blurple: #5865f2;
+    --accent-cyan: #38bdf8;
+    --accent-emerald: #34d399;
+    --accent-amber: #fbbf24;
+    --accent-rose: #f43f5e;
+
+    --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(88, 101, 242, 0.12) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    box-shadow: var(--shadow-glow);
+}
+
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-icon {
+    font-size: 2.2rem;
+    color: var(--accent-blurple);
+    filter: drop-shadow(0 0 12px rgba(88, 101, 242, 0.6));
+}
+
+.logo-text h1 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #fff, var(--accent-blurple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sub-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-blurple {
+    background: linear-gradient(135deg, var(--accent-blurple), #4752c4);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
+}
+
+.btn-blurple:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 22px rgba(88, 101, 242, 0.6);
+}
+
+.btn-secondary {
+    background: rgba(30, 41, 59, 0.9);
+    color: var(--text-primary);
+    border: 1px solid var(--border-glass);
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+/* Timer Section */
+.timer-card {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.timer-circle {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    margin: 20px 0;
+}
+
+.timer-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.05);
+    stroke-width: 12;
+}
+
+.timer-bar {
+    fill: none;
+    stroke: var(--accent-blurple);
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-dasharray: 565;
+    stroke-dashoffset: 140;
+    transition: stroke-dashoffset 0.5s ease;
+    filter: drop-shadow(0 0 8px rgba(88, 101, 242, 0.8));
+}
+
+.timer-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-val {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.timer-lbl {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+/* Metrics Row */
+.kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.kpi-box {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--border-glass);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.kpi-box-num {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.kpi-box-lbl {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* Logs Section */
+.logs-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+}
+
+.logs-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.log-item {
+    background: rgba(15, 23, 42, 0.85);
+    border-left: 4px solid var(--accent-emerald);
+    padding: 12px 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.log-item.failed {
+    border-left-color: var(--accent-rose);
+}
+
+.log-info strong {
+    color: var(--text-primary);
+}
+
+.log-info span {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Tokens Table */
+.tokens-card {
+    grid-column: span 2;
+    padding: 24px;
+}
+
+@media (max-width: 1024px) {
+    .tokens-card { grid-column: span 1; }
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.tokens-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+}
+
+.tokens-table th {
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--text-secondary);
+    padding: 12px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.tokens-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.badge-online {
+    background: rgba(52, 211, 153, 0.15);
+    color: var(--accent-emerald);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header glass-card">
+            <div class="header-brand">
+                <div class="logo-icon"><i data-lucide="bot"></i></div>
+                <div class="logo-text">
+                    <h1>BUMPER</h1>
+                    <span class="sub-title">Discord Otomatik Sunucu & Bağlantı Öne Çıkarıcı</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="bump-now-btn" class="btn btn-blurple">
+                    <i data-lucide="zap"></i> Şimdi Bump Et
+                </button>
+                <button id="refresh-btn" class="btn btn-secondary">
+                    <i data-lucide="refresh-cw"></i> Yenile
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+
+            <!-- Timer Circle Card -->
+            <section class="timer-card glass-card">
+                <h3 class="card-title"><i data-lucide="clock"></i> Sonraki Otomatik Bump Zamanı</h3>
+                
+                <div class="timer-circle">
+                    <svg class="timer-svg">
+                        <circle class="timer-bg" cx="110" cy="110" r="90"></circle>
+                        <circle class="timer-bar" id="timer-bar" cx="110" cy="110" r="90"></circle>
+                    </svg>
+                    <div class="timer-content">
+                        <span class="timer-val" id="countdown-val">01m 26s</span>
+                        <span class="timer-lbl" id="countdown-pct">74% Tamamlandı</span>
+                    </div>
+                </div>
+
+                <div class="kpi-row">
+                    <div class="kpi-box">
+                        <div class="kpi-box-num" id="kpi-bumps">142</div>
+                        <div class="kpi-box-lbl">Başarılı Bump</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-box-num" id="kpi-servers">12</div>
+                        <div class="kpi-box-lbl">Hedef Sunucu</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-box-num" id="kpi-tokens">2</div>
+                        <div class="kpi-box-lbl">Aktif Token</div>
+                    </div>
+                    <div class="kpi-box">
+                        <div class="kpi-box-num" style="color:var(--accent-rose);" id="kpi-fails">1</div>
+                        <div class="kpi-box-lbl">Hata / Limit</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Activity Logs -->
+            <section class="logs-card glass-card">
+                <h3 class="card-title"><i data-lucide="list"></i> Canlı Aktivite Günlükleri</h3>
+                <div class="logs-wrapper" id="logs-wrapper">
+                    <!-- Dynamic Log Items -->
+                </div>
+            </section>
+
+            <!-- Tokens Management -->
+            <section class="tokens-card glass-card">
+                <h3 class="card-title"><i data-lucide="key"></i> Token & Hesap Yönetimi</h3>
+                <div class="table-wrapper">
+                    <table class="tokens-table">
+                        <thead>
+                            <tr>
+                                <th>Hesap Adı</th>
+                                <th>Maskeli Token</th>
+                                <th>Hedef Kanal ID</th>
+                                <th>Durum</th>
+                                <th>Toplam Bump</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tokens-table-body">
+                            <!-- Dynamic Token Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Script -->
+    <script>
+        const countdownVal = document.getElementById('countdown-val');
+        const countdownPct = document.getElementById('countdown-pct');
+        const timerBar = document.getElementById('timer-bar');
+        const logsWrapper = document.getElementById('logs-wrapper');
+        const tokensTableBody = document.getElementById('tokens-table-body');
+        const bumpNowBtn = document.getElementById('bump-now-btn');
+
+        let totalSec = 7200;
+        let currentSec = 86;
+
+        function updateTimerDisplay(seconds, pct) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            countdownVal.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
+            countdownPct.textContent = `%${pct} Tamamlandı`;
+
+            // Circumference is ~565
+            const offset = 565 - (565 * (pct / 100));
+            timerBar.style.strokeDashoffset = offset;
+        }
+
+        async function fetchStatus() {
+            try {
+                const res = await fetch('/api/stream');
+                const text = await res.text();
+                const jsonStr = text.replace('data: ', '').trim();
+                if (!jsonStr) return;
+                const data = JSON.parse(jsonStr);
+
+                updateTimerDisplay(data.seconds_remaining, data.progress_pct);
+
+                document.getElementById('kpi-bumps').textContent = data.total_success;
+                document.getElementById('kpi-fails').textContent = data.total_failed;
+                document.getElementById('kpi-servers').textContent = data.total_servers;
+                document.getElementById('kpi-tokens').textContent = data.tokens.length;
+
+                // Render Logs
+                logsWrapper.innerHTML = '';
+                data.logs.forEach(l => {
+                    const div = document.createElement('div');
+                    div.className = `log-item ${l.status === 'SUCCESS' ? '' : 'failed'}`;
+                    div.innerHTML = `
+                        <div class="log-info">
+                            <strong>${l.token_name} &gt; ${l.server_name} (${l.channel_id})</strong>
+                            <span>${l.message}</span>
+                        </div>
+                        <span style="color: #64748b; font-weight: bold;">${l.formatted_time}</span>
+                    `;
+                    logsWrapper.appendChild(div);
+                });
+
+                // Render Tokens
+                tokensTableBody.innerHTML = '';
+                data.tokens.forEach(t => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:600;">${t.name}</td>
+                        <td style="font-family:monospace; color:var(--accent-cyan);">${t.masked_token}</td>
+                        <td style="color:#94a3b8;">${t.channel_id}</td>
+                        <td><span class="badge-online">✓ ${t.status}</span></td>
+                        <td><strong>${t.total_bumps}</strong></td>
+                    `;
+                    tokensTableBody.appendChild(tr);
+                });
+
+            } catch (e) {
+                console.error('Status fetch error:', e);
+            }
+        }
+
+        bumpNowBtn.addEventListener('click', async () => {
+            try {
+                await fetch('/api/bump-now', { method: 'POST' });
+                fetchStatus();
+                alert('⚡ Manüel bump isteği tetiklendi!');
+            } catch (e) {
+                console.error(e);
+            }
+        });
+
+        // Loop countdown ticker locally
+        setInterval(() => {
+            if (currentSec > 0) {
+                currentSec--;
+                const pct = Math.floor(((7200 - currentSec) / 7200) * 100);
+                updateTimerDisplay(currentSec, pct);
+            } else {
+                fetchStatus();
+            }
+        }, 1000);
+
+        fetchStatus();
+        lucide.createIcons();
+    </script>
+</body>
+</html>
