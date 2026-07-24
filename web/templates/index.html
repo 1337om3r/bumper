@@ -8,24 +8,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- FontAwesome Icons for crisp rendering -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
 :root {
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-heading: 'Outfit', sans-serif;
 
-    --bg-dark: #0b0f19;
-    --bg-sidebar: #0f1422;
-    --bg-card: rgba(19, 25, 41, 0.85);
-    --bg-card-hover: rgba(26, 35, 56, 0.95);
-    --bg-inner: rgba(11, 15, 25, 0.7);
+    --bg-dark: #090d16;
+    --bg-sidebar: #0e1320;
+    --bg-card: rgba(18, 24, 38, 0.85);
+    --bg-card-hover: rgba(25, 34, 54, 0.95);
+    --bg-inner: rgba(10, 14, 24, 0.7);
 
     --border-glass: rgba(255, 255, 255, 0.08);
-    --border-glow: rgba(88, 101, 242, 0.3);
 
-    --text-primary: #f1f5f9;
+    --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
 
@@ -33,10 +32,9 @@
     --accent-cyan: #22d3ee;
     --accent-purple: #a855f7;
     --accent-emerald: #10b981;
-    --accent-amber: #f59e0b;
     --accent-rose: #f43f5e;
 
-    --shadow-glow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
+    --shadow-glow: 0 12px 40px -10px rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -50,12 +48,11 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     background-image: 
-        radial-gradient(at 15% 15%, rgba(88, 101, 242, 0.15) 0px, transparent 45%),
-        radial-gradient(at 85% 85%, rgba(34, 211, 238, 0.1) 0px, transparent 45%);
+        radial-gradient(at 10% 10%, rgba(88, 101, 242, 0.15) 0px, transparent 45%),
+        radial-gradient(at 90% 90%, rgba(34, 211, 238, 0.1) 0px, transparent 45%);
     background-attachment: fixed;
     min-height: 100vh;
     display: flex;
-    overflow-x: hidden;
 }
 
 /* Sidebar */
@@ -79,7 +76,7 @@ body {
 .brand-logo i {
     font-size: 1.8rem;
     color: var(--accent-blurple);
-    filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.8));
+    filter: drop-shadow(0 0 12px rgba(88, 101, 242, 0.8));
 }
 
 .brand-logo span {
@@ -117,7 +114,7 @@ body {
 }
 
 .nav-item.active {
-    background: rgba(88, 101, 242, 0.12);
+    background: rgba(88, 101, 242, 0.15);
     color: #fff;
     font-weight: 600;
 }
@@ -128,13 +125,13 @@ body {
     left: 0;
     top: 8px;
     bottom: 8px;
-    width: 3px;
+    width: 4px;
     background: var(--accent-cyan);
     border-radius: 0 4px 4px 0;
-    box-shadow: 0 0 8px var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
 }
 
-/* Main Content Area */
+/* Main Wrapper */
 .main-wrapper {
     flex: 1;
     display: flex;
@@ -160,7 +157,7 @@ body {
 
 .welcome-txt {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .welcome-txt strong {
@@ -185,11 +182,11 @@ body {
 
 .search-box i {
     position: absolute;
-    left: 10px;
+    left: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
-    width: 16px;
+    font-size: 0.85rem;
 }
 
 .header-actions {
@@ -203,15 +200,12 @@ body {
     border: none;
     color: var(--text-secondary);
     cursor: pointer;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 1rem;
 }
 
 .user-avatar {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--accent-blurple), var(--accent-cyan));
     display: flex;
@@ -219,6 +213,7 @@ body {
     justify-content: center;
     font-weight: 700;
     font-size: 0.85rem;
+    color: #fff;
 }
 
 /* Dashboard Body */
@@ -264,10 +259,10 @@ body {
     box-shadow: 0 0 10px var(--accent-emerald);
 }
 
-/* Main Grid Layout */
+/* Main Content Grid */
 .content-grid {
     display: grid;
-    grid-template-columns: 460px 1fr;
+    grid-template-columns: 440px 1fr;
     grid-template-rows: auto auto;
     gap: 24px;
 }
@@ -276,7 +271,7 @@ body {
     .content-grid { grid-template-columns: 1fr; }
 }
 
-/* Glass Card Box */
+/* Glass Cards */
 .glass-box {
     background: var(--bg-card);
     backdrop-filter: blur(16px);
@@ -313,9 +308,9 @@ body {
 
 .ring-container {
     position: relative;
-    width: 240px;
-    height: 240px;
-    margin: 10px 0 20px 0;
+    width: 270px;
+    height: 270px;
+    margin: 10px 0 14px 0;
 }
 
 .ring-svg {
@@ -335,10 +330,10 @@ body {
     stroke: url(#ring-gradient);
     stroke-width: 14;
     stroke-linecap: round;
-    stroke-dasharray: 628;
-    stroke-dashoffset: 160;
+    stroke-dasharray: 691;
+    stroke-dashoffset: 170;
     transition: stroke-dashoffset 0.5s ease;
-    filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6));
+    filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.6));
 }
 
 .ring-center {
@@ -349,47 +344,52 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 190px;
 }
 
 .pct-num {
     font-family: var(--font-heading);
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     font-weight: 800;
     color: #fff;
     line-height: 1;
 }
 
 .next-lbl {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .countdown-txt {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--accent-cyan);
     margin-top: 2px;
 }
 
 .target-info {
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     color: var(--text-secondary);
-    margin-top: 6px;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 170px;
 }
 
 .pill-status {
     background: rgba(16, 185, 129, 0.15);
     border: 1px solid rgba(16, 185, 129, 0.3);
     color: var(--accent-emerald);
-    padding: 4px 12px;
+    padding: 3px 10px;
     border-radius: 20px;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
 /* Stats Row */
@@ -398,9 +398,9 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 16px;
     border-top: 1px solid var(--border-glass);
-    padding-top: 18px;
+    padding-top: 16px;
 }
 
 .stat-cell {
@@ -411,13 +411,13 @@ body {
 
 .stat-val {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: #fff;
 }
 
 .stat-lbl {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
     margin-top: 2px;
 }
@@ -427,7 +427,7 @@ body {
     display: flex;
     gap: 10px;
     width: 100%;
-    margin-top: 24px;
+    margin-top: 20px;
 }
 
 .btn-main {
@@ -473,7 +473,7 @@ body {
 
 /* Live Logs Card */
 .logs-card {
-    height: 280px;
+    height: 300px;
     display: flex;
     flex-direction: column;
 }
@@ -488,7 +488,7 @@ body {
 }
 
 .log-row {
-    background: rgba(11, 15, 25, 0.6);
+    background: rgba(10, 14, 24, 0.6);
     border-left: 3px solid var(--accent-emerald);
     border-radius: 6px;
     padding: 10px 14px;
@@ -530,6 +530,25 @@ body {
 .token-card {
     display: flex;
     flex-direction: column;
+}
+
+.btn-add-token-header {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--accent-emerald);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-add-token-header:hover {
+    background: rgba(16, 185, 129, 0.25);
 }
 
 .table-frame {
@@ -576,6 +595,7 @@ body {
     height: 6px;
     border-radius: 50%;
     background: var(--accent-emerald);
+    box-shadow: 0 0 8px var(--accent-emerald);
 }
 
 /* Modal */
@@ -613,7 +633,7 @@ body {
 .form-field input {
     width: 100%;
     padding: 10px;
-    background: rgba(11, 15, 25, 0.8);
+    background: rgba(10, 14, 24, 0.8);
     border: 1px solid var(--border-glass);
     border-radius: 8px;
     color: #fff;
@@ -626,24 +646,24 @@ body {
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
         <div class="brand-logo">
-            <i data-lucide="bot"></i>
+            <i class="fa-brands fa-discord"></i>
             <span>BUMPER</span>
         </div>
         <ul class="nav-list">
-            <li class="nav-item active" onclick="switchTab('dashboard')">
-                <i data-lucide="layout-dashboard"></i> Dashboard
+            <li class="nav-item active" onclick="switchTab('dashboard', this)">
+                <i class="fa-solid fa-gauge-high"></i> Dashboard
             </li>
-            <li class="nav-item" onclick="switchTab('tokens')">
-                <i data-lucide="key-round"></i> Token Manager
+            <li class="nav-item" onclick="switchTab('tokens', this)">
+                <i class="fa-solid fa-key"></i> Token Manager
             </li>
-            <li class="nav-item" onclick="switchTab('logs')">
-                <i data-lucide="receipt"></i> Logs
+            <li class="nav-item" onclick="switchTab('logs', this)">
+                <i class="fa-solid fa-list-check"></i> Logs
             </li>
-            <li class="nav-item" onclick="switchTab('settings')">
-                <i data-lucide="settings"></i> Settings
+            <li class="nav-item" onclick="switchTab('settings', this)">
+                <i class="fa-solid fa-sliders"></i> Settings
             </li>
-            <li class="nav-item" onclick="switchTab('help')">
-                <i data-lucide="help-circle"></i> Help
+            <li class="nav-item" onclick="switchTab('help', this)">
+                <i class="fa-solid fa-circle-question"></i> Help
             </li>
         </ul>
     </aside>
@@ -656,11 +676,11 @@ body {
                 <div class="welcome-txt">Welcome, <strong>Admin</strong></div>
             </div>
             <div class="search-box">
-                <i data-lucide="search"></i>
+                <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text" placeholder="Search...">
             </div>
             <div class="header-actions">
-                <button class="icon-btn"><i data-lucide="bell"></i></button>
+                <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
                 <div class="user-avatar">A</div>
             </div>
         </header>
@@ -681,30 +701,30 @@ body {
                 <div class="glass-box monitoring-card">
                     <div class="box-header" style="width:100%;">
                         <span class="box-title">AUTOBUMP MONITORING</span>
-                        <i data-lucide="more-horizontal" style="color:var(--text-muted); cursor:pointer;"></i>
+                        <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
                     </div>
 
                     <div class="ring-container">
-                        <svg class="ring-svg">
+                        <svg class="ring-svg" viewBox="0 0 240 240">
                             <defs>
                                 <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                                     <stop offset="0%" stop-color="#a855f7" />
                                     <stop offset="100%" stop-color="#22d3ee" />
                                 </linearGradient>
                             </defs>
-                            <circle class="ring-bg" cx="120" cy="120" r="100"></circle>
-                            <circle class="ring-bar" id="ring-bar" cx="120" cy="120" r="100"></circle>
+                            <circle class="ring-bg" cx="120" cy="120" r="110"></circle>
+                            <circle class="ring-bar" id="ring-bar" cx="120" cy="120" r="110"></circle>
                         </svg>
                         <div class="ring-center">
                             <span class="pct-num" id="pct-num">74%</span>
                             <span class="next-lbl">NEXT BUMP IN:</span>
                             <span class="countdown-txt" id="countdown-txt">01m 26s</span>
-                            <span class="target-info">Bump Target: #general-chat | server-1</span>
+                            <span class="target-info">#general-chat | server-1</span>
                             <span class="pill-status">AUTO-BUMPING</span>
                         </div>
                     </div>
 
-                    <span style="font-size:0.75rem; color:var(--text-muted);">Real-time progress</span>
+                    <span style="font-size:0.72rem; color:var(--text-muted);">Real-time progress</span>
 
                     <div class="stats-grid">
                         <div class="stat-cell">
@@ -727,8 +747,8 @@ body {
 
                     <div class="controls-bar">
                         <button class="btn-main" id="btn-toggle-engine">START / STOP</button>
-                        <button class="btn-sub" id="btn-open-settings"><i data-lucide="settings"></i> SETTINGS</button>
-                        <button class="btn-sub" id="btn-refresh"><i data-lucide="refresh-cw"></i> REFRESH</button>
+                        <button class="btn-sub" id="btn-open-settings"><i class="fa-solid fa-gear"></i> SETTINGS</button>
+                        <button class="btn-sub" id="btn-refresh"><i class="fa-solid fa-rotate-right"></i> REFRESH</button>
                     </div>
                 </div>
 
@@ -736,7 +756,7 @@ body {
                 <div class="glass-box logs-card">
                     <div class="box-header">
                         <span class="box-title">LIVE ACTIVITY LOGS</span>
-                        <i data-lucide="more-horizontal" style="color:var(--text-muted); cursor:pointer;"></i>
+                        <i class="fa-solid fa-ellipsis-h" style="color:var(--text-muted); cursor:pointer;"></i>
                     </div>
                     <div class="logs-list" id="logs-list">
                         <!-- Dynamic Logs -->
@@ -747,7 +767,9 @@ body {
                 <div class="glass-box token-card">
                     <div class="box-header">
                         <span class="box-title">TOKEN MANAGEMENT</span>
-                        <button class="btn-sub" id="btn-add-token-modal" style="padding:4px 10px; font-size:0.7rem;">+ ADD TOKEN</button>
+                        <button class="btn-add-token-header" id="btn-add-token-modal">
+                            <i class="fa-solid fa-plus"></i> ADD TOKEN
+                        </button>
                     </div>
                     <div class="table-frame">
                         <table class="table-custom">
@@ -810,8 +832,8 @@ body {
             const s = secRemaining % 60;
             countdownTxt.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
 
-            // Circumference for r=100 is 628
-            const offset = 628 - (628 * (pct / 100));
+            // Circumference for r=110 is ~691
+            const offset = 691 - (691 * (pct / 100));
             ringBar.style.strokeDashoffset = offset;
         }
 
@@ -900,14 +922,13 @@ body {
         });
 
         document.getElementById('btn-refresh').addEventListener('click', refreshData);
-        function switchTab(name) {
+        function switchTab(name, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            el.classList.add('active');
         }
 
         setInterval(refreshData, 3000);
         refreshData();
-        lucide.createIcons();
     </script>
 </body>
 </html>
