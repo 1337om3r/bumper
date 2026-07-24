@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUMPER | Discord Otomatik Sunucu Öne Çıkarıcı & Yönetici</title>
+    <title>BUMPER — Discord Auto-Bump Dashboard</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,23 +16,27 @@
     --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-heading: 'Outfit', sans-serif;
 
-    --bg-dark: #0e1117;
-    --bg-card: rgba(22, 27, 38, 0.75);
-    --bg-card-hover: rgba(30, 38, 54, 0.9);
+    --bg-dark: #0b0f19;
+    --bg-sidebar: #0f1422;
+    --bg-card: rgba(19, 25, 41, 0.85);
+    --bg-card-hover: rgba(26, 35, 56, 0.95);
+    --bg-inner: rgba(11, 15, 25, 0.7);
 
     --border-glass: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(88, 101, 242, 0.3);
 
-    --text-primary: #f8fafc;
+    --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
 
     --accent-blurple: #5865f2;
-    --accent-cyan: #38bdf8;
-    --accent-emerald: #34d399;
-    --accent-amber: #fbbf24;
+    --accent-cyan: #22d3ee;
+    --accent-purple: #a855f7;
+    --accent-emerald: #10b981;
+    --accent-amber: #f59e0b;
     --accent-rose: #f43f5e;
 
-    --shadow-glow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+    --shadow-glow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
 }
 
 * {
@@ -46,161 +50,298 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     background-image: 
-        radial-gradient(at 10% 10%, rgba(88, 101, 242, 0.12) 0px, transparent 50%),
-        radial-gradient(at 90% 90%, rgba(56, 189, 248, 0.08) 0px, transparent 50%);
+        radial-gradient(at 15% 15%, rgba(88, 101, 242, 0.15) 0px, transparent 45%),
+        radial-gradient(at 85% 85%, rgba(34, 211, 238, 0.1) 0px, transparent 45%);
     background-attachment: fixed;
     min-height: 100vh;
-    padding: 20px;
+    display: flex;
+    overflow-x: hidden;
 }
 
-.glass-card {
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-glass);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px 28px 12px;
+}
+
+.brand-logo i {
+    font-size: 1.8rem;
+    color: var(--accent-blurple);
+    filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.8));
+}
+
+.brand-logo span {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #fff;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+}
+
+.nav-item.active {
+    background: rgba(88, 101, 242, 0.12);
+    color: #fff;
+    font-weight: 600;
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: var(--accent-cyan);
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+/* Main Content Area */
+.main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+/* Top Header */
+.top-header {
+    height: 70px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.welcome-txt {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.welcome-txt strong {
+    color: var(--text-primary);
+}
+
+.search-box {
+    position: relative;
+    width: 260px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.search-box i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    width: 16px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-blurple), var(--accent-cyan));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* Dashboard Body */
+.dashboard-body {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dashboard-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--accent-emerald);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.dot-green {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
+    box-shadow: 0 0 10px var(--accent-emerald);
+}
+
+/* Main Grid Layout */
+.content-grid {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+}
+
+@media (max-width: 1200px) {
+    .content-grid { grid-template-columns: 1fr; }
+}
+
+/* Glass Card Box */
+.glass-box {
     background: var(--bg-card);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: 16px;
+    padding: 24px;
     box-shadow: var(--shadow-glow);
 }
 
-.app-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Header */
-.app-header {
+.box-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
-    flex-wrap: wrap;
-    gap: 16px;
+    margin-bottom: 20px;
 }
 
-.header-brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.logo-icon {
-    font-size: 2.2rem;
-    color: var(--accent-blurple);
-    filter: drop-shadow(0 0 12px rgba(88, 101, 242, 0.6));
-}
-
-.logo-text h1 {
-    font-family: var(--font-heading);
-    font-size: 1.6rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(90deg, #fff, var(--accent-blurple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.sub-title {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 12px;
-}
-
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 10px;
+.box-title {
     font-size: 0.85rem;
     font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
 }
 
-.btn-blurple {
-    background: linear-gradient(135deg, var(--accent-blurple), #4752c4);
-    color: #fff;
-    box-shadow: 0 0 15px rgba(88, 101, 242, 0.4);
-}
-
-.btn-blurple:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 22px rgba(88, 101, 242, 0.6);
-}
-
-.btn-emerald {
-    background: linear-gradient(135deg, var(--accent-emerald), #059669);
-    color: #fff;
-    box-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
-}
-
-.btn-secondary {
-    background: rgba(30, 41, 59, 0.9);
-    color: var(--text-primary);
-    border: 1px solid var(--border-glass);
-}
-
-/* Dashboard Grid */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-@media (max-width: 1024px) {
-    .dashboard-grid { grid-template-columns: 1fr; }
-}
-
-/* Timer Section */
-.timer-card {
-    padding: 30px;
+/* Autobump Monitoring Card */
+.monitoring-card {
+    grid-row: span 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
 }
 
-.timer-circle {
+.ring-container {
     position: relative;
-    width: 220px;
-    height: 220px;
-    margin: 20px 0;
+    width: 240px;
+    height: 240px;
+    margin: 10px 0 20px 0;
 }
 
-.timer-svg {
+.ring-svg {
     width: 100%;
     height: 100%;
     transform: rotate(-90deg);
 }
 
-.timer-bg {
+.ring-bg {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.05);
-    stroke-width: 12;
+    stroke: rgba(255, 255, 255, 0.04);
+    stroke-width: 14;
 }
 
-.timer-bar {
+.ring-bar {
     fill: none;
-    stroke: var(--accent-blurple);
-    stroke-width: 12;
+    stroke: url(#ring-gradient);
+    stroke-width: 14;
     stroke-linecap: round;
-    stroke-dasharray: 565;
-    stroke-dashoffset: 140;
+    stroke-dasharray: 628;
+    stroke-dashoffset: 160;
     transition: stroke-dashoffset 0.5s ease;
-    filter: drop-shadow(0 0 8px rgba(88, 101, 242, 0.8));
+    filter: drop-shadow(0 0 12px rgba(34, 211, 238, 0.6));
 }
 
-.timer-content {
+.ring-center {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -210,354 +351,471 @@ body {
     align-items: center;
 }
 
-.timer-val {
+.pct-num {
     font-family: var(--font-heading);
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     font-weight: 800;
-    color: var(--text-primary);
+    color: #fff;
+    line-height: 1;
 }
 
-.timer-lbl {
-    font-size: 0.75rem;
+.next-lbl {
+    font-size: 0.65rem;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 4px;
+    letter-spacing: 1.2px;
+    margin-top: 6px;
 }
 
-/* Metrics Row */
-.kpi-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    width: 100%;
+.countdown-txt {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-top: 2px;
+}
+
+.target-info {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.pill-status {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--accent-emerald);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
     margin-top: 10px;
 }
 
-.kpi-box {
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid var(--border-glass);
-    padding: 12px;
-    border-radius: 10px;
-    text-align: center;
+/* Stats Row */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-glass);
+    padding-top: 18px;
 }
 
-.kpi-box-num {
+.stat-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-val {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--accent-cyan);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
 }
 
-.kpi-box-lbl {
+.stat-lbl {
     font-size: 0.7rem;
-    color: var(--text-secondary);
+    color: var(--text-muted);
     margin-top: 2px;
 }
 
-/* Logs Section */
+/* Controls Bar */
+.controls-bar {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 24px;
+}
+
+.btn-main {
+    flex: 2;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent-blurple), #4338ca);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(88, 101, 242, 0.6);
+}
+
+.btn-sub {
+    flex: 1;
+    padding: 12px;
+    background: rgba(30, 41, 59, 0.7);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-glass);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-sub:hover {
+    background: rgba(51, 65, 85, 0.8);
+    color: #fff;
+}
+
+/* Live Logs Card */
 .logs-card {
-    padding: 24px;
+    height: 280px;
     display: flex;
     flex-direction: column;
 }
 
-.card-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
-
-.card-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text-secondary);
-}
-
-.logs-wrapper {
+.logs-list {
+    flex: 1;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 420px;
-    overflow-y: auto;
+    padding-right: 6px;
 }
 
-.log-item {
-    background: rgba(15, 23, 42, 0.85);
-    border-left: 4px solid var(--accent-emerald);
-    padding: 12px 16px;
-    border-radius: 8px;
+.log-row {
+    background: rgba(11, 15, 25, 0.6);
+    border-left: 3px solid var(--accent-emerald);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    justify-content: space-between;
 }
 
-.log-item.failed {
+.log-row.failed {
     border-left-color: var(--accent-rose);
 }
 
-.log-info strong {
-    color: var(--text-primary);
+.log-time {
+    color: var(--accent-cyan);
+    font-family: monospace;
+    margin-right: 10px;
 }
 
-.log-info span {
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    display: block;
-    margin-top: 2px;
+.log-badge-succ {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
 }
 
-/* Tokens Table */
-.tokens-card {
-    grid-column: span 2;
-    padding: 24px;
+.log-badge-err {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--accent-rose);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.7rem;
 }
 
-@media (max-width: 1024px) {
-    .tokens-card { grid-column: span 1; }
+/* Token Management Card */
+.token-card {
+    display: flex;
+    flex-direction: column;
 }
 
-.table-wrapper {
+.table-frame {
     overflow-x: auto;
 }
 
-.tokens-table {
+.table-custom {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     text-align: left;
 }
 
-.tokens-table th {
-    background: rgba(15, 23, 42, 0.9);
-    color: var(--text-secondary);
-    padding: 12px;
+.table-custom th {
+    padding: 10px 12px;
+    color: var(--text-muted);
     font-weight: 600;
     border-bottom: 1px solid var(--border-glass);
 }
 
-.tokens-table td {
+.table-custom td {
     padding: 12px;
     border-bottom: 1px solid var(--border-glass);
 }
 
-.badge-online {
-    background: rgba(52, 211, 153, 0.15);
-    color: var(--accent-emerald);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-.btn-danger {
-    background: rgba(244, 63, 94, 0.2);
-    color: var(--accent-rose);
-    border: 1px solid rgba(244, 63, 94, 0.3);
+.token-pill {
+    background: rgba(88, 101, 242, 0.15);
+    color: var(--accent-blurple);
     padding: 4px 10px;
     border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.75rem;
+    font-family: monospace;
+}
+
+.online-tag {
+    color: var(--accent-emerald);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.online-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-emerald);
 }
 
 /* Modal */
-.modal-overlay {
+.modal-bg {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 999;
 }
 
-.modal-content {
-    background: #161b26;
+.modal-box {
+    background: #131929;
     border: 1px solid var(--border-glass);
-    padding: 30px;
     border-radius: 16px;
+    padding: 28px;
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
 }
 
-.form-group {
+.form-field {
     margin-bottom: 16px;
 }
 
-.form-group label {
+.form-field label {
     display: block;
     font-size: 0.8rem;
     color: var(--text-secondary);
     margin-bottom: 6px;
 }
 
-.form-control {
+.form-field input {
     width: 100%;
-    padding: 10px 14px;
-    background: rgba(15, 23, 42, 0.9);
+    padding: 10px;
+    background: rgba(11, 15, 25, 0.8);
     border: 1px solid var(--border-glass);
     border-radius: 8px;
-    color: var(--text-primary);
-    font-size: 0.9rem;
+    color: #fff;
+    outline: none;
 }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header glass-card">
-            <div class="header-brand">
-                <div class="logo-icon"><i data-lucide="bot"></i></div>
-                <div class="logo-text">
-                    <h1>BUMPER</h1>
-                    <span class="sub-title">Discord Otomatik Sunucu & Bağlantı Öne Çıkarıcı</span>
-                </div>
-            </div>
 
-            <div class="action-buttons">
-                <button id="bump-now-btn" class="btn btn-blurple">
-                    <i data-lucide="zap"></i> Şimdi Bump Et
-                </button>
-                <button id="open-modal-btn" class="btn btn-emerald">
-                    <i data-lucide="plus-circle"></i> Token Ekle
-                </button>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="brand-logo">
+            <i data-lucide="bot"></i>
+            <span>BUMPER</span>
+        </div>
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="switchTab('dashboard')">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </li>
+            <li class="nav-item" onclick="switchTab('tokens')">
+                <i data-lucide="key-round"></i> Token Manager
+            </li>
+            <li class="nav-item" onclick="switchTab('logs')">
+                <i data-lucide="receipt"></i> Logs
+            </li>
+            <li class="nav-item" onclick="switchTab('settings')">
+                <i data-lucide="settings"></i> Settings
+            </li>
+            <li class="nav-item" onclick="switchTab('help')">
+                <i data-lucide="help-circle"></i> Help
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <div class="welcome-txt">Welcome, <strong>Admin</strong></div>
+            </div>
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn"><i data-lucide="bell"></i></button>
+                <div class="user-avatar">A</div>
             </div>
         </header>
 
-        <!-- Main Dashboard Grid -->
-        <main class="dashboard-grid">
-
-            <!-- Timer Circle Card -->
-            <section class="timer-card glass-card">
-                <h3 class="card-title"><i data-lucide="clock"></i> Sonraki Otomatik Bump Zamanı</h3>
-                
-                <div class="timer-circle">
-                    <svg class="timer-svg">
-                        <circle class="timer-bg" cx="110" cy="110" r="90"></circle>
-                        <circle class="timer-bar" id="timer-bar" cx="110" cy="110" r="90"></circle>
-                    </svg>
-                    <div class="timer-content">
-                        <span class="timer-val" id="countdown-val">01m 26s</span>
-                        <span class="timer-lbl" id="countdown-pct">74% Tamamlandı</span>
-                    </div>
+        <!-- Dashboard Body -->
+        <div class="dashboard-body">
+            <div class="title-row">
+                <h1 class="dashboard-title">BUMPER: Discord Auto-Bump Dashboard</h1>
+                <div class="status-badge" id="engine-status-badge">
+                    <span class="dot-green"></span> ACTIVE & RUNNING
                 </div>
-
-                <div class="kpi-row">
-                    <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-bumps">0</div>
-                        <div class="kpi-box-lbl">Başarılı Bump</div>
-                    </div>
-                    <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-servers">0</div>
-                        <div class="kpi-box-lbl">Hedef Sunucu</div>
-                    </div>
-                    <div class="kpi-box">
-                        <div class="kpi-box-num" id="kpi-tokens">0</div>
-                        <div class="kpi-box-lbl">Aktif Token</div>
-                    </div>
-                    <div class="kpi-box">
-                        <div class="kpi-box-num" style="color:var(--accent-rose);" id="kpi-fails">0</div>
-                        <div class="kpi-box-lbl">Hata / Limit</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Live Activity Logs -->
-            <section class="logs-card glass-card">
-                <div class="card-header-row">
-                    <h3 class="card-title"><i data-lucide="list"></i> Canlı Aktivite Günlükleri</h3>
-                </div>
-                <div class="logs-wrapper" id="logs-wrapper">
-                    <!-- Dynamic Log Items -->
-                </div>
-            </section>
-
-            <!-- Tokens Management -->
-            <section class="tokens-card glass-card">
-                <div class="card-header-row">
-                    <h3 class="card-title"><i data-lucide="key"></i> Token & Hesap Yönetimi (Kullanıcı Kendi Token'ını Ekler)</h3>
-                    <button id="open-modal-btn-2" class="btn btn-emerald" style="padding:6px 14px; font-size:0.75rem;">+ Yeni Token Ekle</button>
-                </div>
-                <div class="table-wrapper">
-                    <table class="tokens-table">
-                        <thead>
-                            <tr>
-                                <th>Hesap / Token Adı</th>
-                                <th>Maskeli Token</th>
-                                <th>Hedef Kanal ID</th>
-                                <th>Durum</th>
-                                <th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tokens-table-body">
-                            <!-- Dynamic Token Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- Modal Form for Token Addition -->
-    <div class="modal-overlay" id="token-modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom:16px; font-family:var(--font-heading);">➕ Kendi Discord Token'ını Ekle</h3>
-            <div class="form-group">
-                <label>Hesap / Token Adı</label>
-                <input type="text" id="input-token-name" class="form-control" placeholder="Örn: Benim-Ana-Hesabim">
             </div>
-            <div class="form-group">
-                <label>Discord Token'ı</label>
-                <input type="password" id="input-token-val" class="form-control" placeholder="Discord hesabınızın Token değeri">
-            </div>
-            <div class="form-group">
-                <label>Hedef Kanal ID</label>
-                <input type="text" id="input-channel-id" class="form-control" placeholder="Örn: 1182348765432198">
-            </div>
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
-                <button id="close-modal-btn" class="btn btn-secondary">İptal</button>
-                <button id="save-token-btn" class="btn btn-blurple">Kaydet & Başlat</button>
+
+            <!-- Content Grid -->
+            <div class="content-grid">
+
+                <!-- Card 1: Autobump Monitoring (Left Side) -->
+                <div class="glass-box monitoring-card">
+                    <div class="box-header" style="width:100%;">
+                        <span class="box-title">AUTOBUMP MONITORING</span>
+                        <i data-lucide="more-horizontal" style="color:var(--text-muted); cursor:pointer;"></i>
+                    </div>
+
+                    <div class="ring-container">
+                        <svg class="ring-svg">
+                            <defs>
+                                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#a855f7" />
+                                    <stop offset="100%" stop-color="#22d3ee" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="ring-bg" cx="120" cy="120" r="100"></circle>
+                            <circle class="ring-bar" id="ring-bar" cx="120" cy="120" r="100"></circle>
+                        </svg>
+                        <div class="ring-center">
+                            <span class="pct-num" id="pct-num">74%</span>
+                            <span class="next-lbl">NEXT BUMP IN:</span>
+                            <span class="countdown-txt" id="countdown-txt">01m 26s</span>
+                            <span class="target-info">Bump Target: #general-chat | server-1</span>
+                            <span class="pill-status">AUTO-BUMPING</span>
+                        </div>
+                    </div>
+
+                    <span style="font-size:0.75rem; color:var(--text-muted);">Real-time progress</span>
+
+                    <div class="stats-grid">
+                        <div class="stat-cell">
+                            <span class="stat-val" id="stat-bumps">142</span>
+                            <span class="stat-lbl">Bumps</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-val" id="stat-servers">12</span>
+                            <span class="stat-lbl">Servers</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-val" id="stat-tokens">8</span>
+                            <span class="stat-lbl">Tokens</span>
+                        </div>
+                        <div class="stat-cell">
+                            <span class="stat-val" style="color:var(--accent-rose);" id="stat-fails">1</span>
+                            <span class="stat-lbl">Failures</span>
+                        </div>
+                    </div>
+
+                    <div class="controls-bar">
+                        <button class="btn-main" id="btn-toggle-engine">START / STOP</button>
+                        <button class="btn-sub" id="btn-open-settings"><i data-lucide="settings"></i> SETTINGS</button>
+                        <button class="btn-sub" id="btn-refresh"><i data-lucide="refresh-cw"></i> REFRESH</button>
+                    </div>
+                </div>
+
+                <!-- Card 2: Live Activity Logs (Top Right) -->
+                <div class="glass-box logs-card">
+                    <div class="box-header">
+                        <span class="box-title">LIVE ACTIVITY LOGS</span>
+                        <i data-lucide="more-horizontal" style="color:var(--text-muted); cursor:pointer;"></i>
+                    </div>
+                    <div class="logs-list" id="logs-list">
+                        <!-- Dynamic Logs -->
+                    </div>
+                </div>
+
+                <!-- Card 3: Token Management (Bottom Right) -->
+                <div class="glass-box token-card">
+                    <div class="box-header">
+                        <span class="box-title">TOKEN MANAGEMENT</span>
+                        <button class="btn-sub" id="btn-add-token-modal" style="padding:4px 10px; font-size:0.7rem;">+ ADD TOKEN</button>
+                    </div>
+                    <div class="table-frame">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Account Name</th>
+                                    <th>Status</th>
+                                    <th>Last Bump</th>
+                                    <th>Performance</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="token-tbody">
+                                <!-- Dynamic Tokens -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Script -->
+    <!-- Modal Form -->
+    <div class="modal-bg" id="modal-add-token">
+        <div class="modal-box">
+            <h3 style="font-family:var(--font-heading); margin-bottom:16px;">➕ Add Discord Token</h3>
+            <div class="form-field">
+                <label>Account Name</label>
+                <input type="text" id="m-name" placeholder="e.g. My-Primary-Account">
+            </div>
+            <div class="form-field">
+                <label>Discord Token</label>
+                <input type="password" id="m-token" placeholder="Paste your Discord User Token">
+            </div>
+            <div class="form-field">
+                <label>Channel ID</label>
+                <input type="text" id="m-channel" placeholder="e.g. 1182348765432198">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                <button class="btn-sub" onclick="closeModal()">Cancel</button>
+                <button class="btn-main" style="flex:none; padding:8px 18px;" onclick="submitToken()">Save & Start</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const countdownVal = document.getElementById('countdown-val');
-        const countdownPct = document.getElementById('countdown-pct');
-        const timerBar = document.getElementById('timer-bar');
-        const logsWrapper = document.getElementById('logs-wrapper');
-        const tokensTableBody = document.getElementById('tokens-table-body');
-        const bumpNowBtn = document.getElementById('bump-now-btn');
+        const ringBar = document.getElementById('ring-bar');
+        const pctNum = document.getElementById('pct-num');
+        const countdownTxt = document.getElementById('countdown-txt');
+        const logsList = document.getElementById('logs-list');
+        const tokenTbody = document.getElementById('token-tbody');
+        const modal = document.getElementById('modal-add-token');
 
-        const modal = document.getElementById('token-modal');
-        const openModalBtn = document.getElementById('open-modal-btn');
-        const openModalBtn2 = document.getElementById('open-modal-btn-2');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const saveTokenBtn = document.getElementById('save-token-btn');
+        let isRunning = true;
 
-        openModalBtn.addEventListener('click', () => modal.style.display = 'flex');
-        openModalBtn2.addEventListener('click', () => modal.style.display = 'flex');
-        closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+        function updateRing(pct, secRemaining) {
+            pctNum.textContent = `%${pct}`;
+            const m = Math.floor(secRemaining / 60);
+            const s = secRemaining % 60;
+            countdownTxt.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
 
-        function updateTimerDisplay(seconds, pct) {
-            const m = Math.floor(seconds / 60);
-            const s = seconds % 60;
-            countdownVal.textContent = `${m.toString().padStart(2, '0')}m ${s.toString().padStart(2, '0')}s`;
-            countdownPct.textContent = `%${pct} Tamamlandı`;
-
-            const offset = 565 - (565 * (pct / 100));
-            timerBar.style.strokeDashoffset = offset;
+            // Circumference for r=100 is 628
+            const offset = 628 - (628 * (pct / 100));
+            ringBar.style.strokeDashoffset = offset;
         }
 
-        async function fetchStatus() {
+        async function refreshData() {
             try {
                 const res = await fetch('/api/stream');
                 const text = await res.text();
@@ -565,92 +823,90 @@ body {
                 if (!jsonStr) return;
                 const data = JSON.parse(jsonStr);
 
-                updateTimerDisplay(data.seconds_remaining, data.progress_pct);
+                updateRing(data.progress_pct, data.seconds_remaining);
 
-                document.getElementById('kpi-bumps').textContent = data.total_success;
-                document.getElementById('kpi-fails').textContent = data.total_failed;
-                document.getElementById('kpi-servers').textContent = data.total_servers;
-                document.getElementById('kpi-tokens').textContent = data.tokens.length;
+                document.getElementById('stat-bumps').textContent = data.total_success;
+                document.getElementById('stat-fails').textContent = data.total_failed;
+                document.getElementById('stat-servers').textContent = data.total_servers;
+                document.getElementById('stat-tokens').textContent = data.tokens.length;
 
                 // Render Logs
-                logsWrapper.innerHTML = '';
+                logsList.innerHTML = '';
                 data.logs.forEach(l => {
-                    const div = document.createElement('div');
-                    div.className = `log-item ${l.status === 'SUCCESS' ? '' : 'failed'}`;
-                    div.innerHTML = `
-                        <div class="log-info">
-                            <strong>${l.token_name} &gt; ${l.server_name} (${l.channel_id})</strong>
-                            <span>${l.message}</span>
+                    const row = document.createElement('div');
+                    row.className = `log-row ${l.status === 'SUCCESS' ? '' : 'failed'}`;
+                    row.innerHTML = `
+                        <div>
+                            <span class="log-time">[${l.formatted_time}]</span>
+                            <strong>${l.token_name}:</strong> <span style="color:var(--text-secondary);">${l.message}</span>
                         </div>
-                        <span style="color: #64748b; font-weight: bold;">${l.formatted_time}</span>
+                        <span class="${l.status === 'SUCCESS' ? 'log-badge-succ' : 'log-badge-err'}">${l.status}</span>
                     `;
-                    logsWrapper.appendChild(div);
+                    logsList.appendChild(row);
                 });
 
                 // Render Tokens
-                tokensTableBody.innerHTML = '';
+                tokenTbody.innerHTML = '';
                 data.tokens.forEach(t => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td style="font-weight:600;">${t.name}</td>
-                        <td style="font-family:monospace; color:var(--accent-cyan);">${t.masked_token}</td>
-                        <td style="color:#94a3b8;">${t.channel_id}</td>
-                        <td><span class="badge-online">✓ ${t.status}</span></td>
-                        <td><button class="btn-danger" onclick="deleteToken(${t.index})">Sil</button></td>
+                        <td><span class="token-pill">${t.masked_token}</span></td>
+                        <td><span class="online-tag"><span class="online-dot"></span> Online</span></td>
+                        <td style="color:var(--text-muted);">Just now</td>
+                        <td style="color:var(--accent-cyan); font-weight:600;">100%</td>
+                        <td><button class="btn-sub" style="padding:2px 8px; font-size:0.7rem;" onclick="deleteToken(${t.index})">Delete</button></td>
                     `;
-                    tokensTableBody.appendChild(tr);
+                    tokenTbody.appendChild(tr);
                 });
 
-            } catch (e) {
-                console.error('Status fetch error:', e);
-            }
+            } catch (e) { console.error(e); }
+        }
+
+        document.getElementById('btn-add-token-modal').addEventListener('click', () => modal.style.display = 'flex');
+        function closeModal() { modal.style.display = 'none'; }
+
+        async function submitToken() {
+            const name = document.getElementById('m-name').value;
+            const token = document.getElementById('m-token').value;
+            const channel_id = document.getElementById('m-channel').value;
+            if (!name || !token || !channel_id) return alert('Please fill all fields!');
+
+            await fetch('/api/add-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, token, channel_id })
+            });
+            closeModal();
+            refreshData();
         }
 
         async function deleteToken(index) {
-            try {
-                await fetch('/api/delete-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ index })
-                });
-                fetchStatus();
-            } catch (e) { console.error(e); }
+            await fetch('/api/delete-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ index })
+            });
+            refreshData();
         }
 
-        saveTokenBtn.addEventListener('click', async () => {
-            const name = document.getElementById('input-token-name').value;
-            const token = document.getElementById('input-token-val').value;
-            const channel_id = document.getElementById('input-channel-id').value;
-
-            if (!name || !token || !channel_id) {
-                alert('Lütfen tüm alanları doldurun!');
-                return;
+        document.getElementById('btn-toggle-engine').addEventListener('click', () => {
+            isRunning = !isRunning;
+            const badge = document.getElementById('engine-status-badge');
+            if (isRunning) {
+                badge.innerHTML = '<span class="dot-green"></span> ACTIVE & RUNNING';
+            } else {
+                badge.innerHTML = '<span class="dot-green" style="background:var(--accent-rose);"></span> STOPPED';
             }
-
-            try {
-                await fetch('/api/add-token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, token, channel_id })
-                });
-                modal.style.display = 'none';
-                document.getElementById('input-token-name').value = '';
-                document.getElementById('input-token-val').value = '';
-                document.getElementById('input-channel-id').value = '';
-                fetchStatus();
-                alert('✅ Yeni Token eklendi!');
-            } catch (e) { console.error(e); }
         });
 
-        bumpNowBtn.addEventListener('click', async () => {
-            try {
-                await fetch('/api/bump-now', { method: 'POST' });
-                fetchStatus();
-                alert('⚡ Manüel bump isteği tetiklendi!');
-            } catch (e) { console.error(e); }
-        });
+        document.getElementById('btn-refresh').addEventListener('click', refreshData);
+        function switchTab(name) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
 
-        fetchStatus();
+        setInterval(refreshData, 3000);
+        refreshData();
         lucide.createIcons();
     </script>
 </body>
